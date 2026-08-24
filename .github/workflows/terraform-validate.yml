@@ -1,0 +1,45 @@
+name: Terraform Module Validation
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate:
+    name: Validate Terraform Modules
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.5.0"
+
+      - name: Terraform Format Check (Root)
+        run: terraform fmt -check -recursive
+        continue-on-error: true
+
+      - name: Validate S3 Bucket Module
+        run: |
+          cd modules/s3-bucket
+          terraform init -backend=false
+          terraform validate
+
+      - name: Validate IAM Role Module
+        run: |
+          cd modules/iam-role
+          terraform init -backend=false
+          terraform validate
+
+      - name: Validate Glue Job Module
+        run: |
+          cd modules/glue-job
+          terraform init -backend=false
+          terraform validate
