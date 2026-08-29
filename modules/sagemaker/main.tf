@@ -1,2 +1,0 @@
-# Recursos do modulo: sagemaker
-

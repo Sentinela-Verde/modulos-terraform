@@ -24,22 +24,12 @@ jobs:
 
       - name: Terraform Format Check (Root)
         run: terraform fmt -check -recursive
-        continue-on-error: true
 
-      - name: Validate S3 Bucket Module
+      - name: Validate All Modules
         run: |
-          cd modules/s3-bucket
-          terraform init -backend=false
-          terraform validate
+          set -euo pipefail
 
-      - name: Validate IAM Role Module
-        run: |
-          cd modules/iam-role
-          terraform init -backend=false
-          terraform validate
-
-      - name: Validate Glue Job Module
-        run: |
-          cd modules/glue-job
-          terraform init -backend=false
-          terraform validate
+          for module in modules/*/; do
+            echo "== Validating ${module} =="
+            (cd "$module" && terraform init -backend=false && terraform validate)
+          done
