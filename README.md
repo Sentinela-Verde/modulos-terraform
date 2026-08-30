@@ -8,8 +8,15 @@ A ideia é que os repositórios dos projetos específicos (como o Lakehouse) ape
 - [`s3-bucket`](modules/s3-bucket/): Provisionamento de Buckets S3 com versionamento e criptografia.
 - [`iam-role`](modules/iam-role/): Criação de Roles e anexação de Policies do IAM.
 - [`glue-job`](modules/glue-job/): Criação de Jobs do AWS Glue para processamento de dados.
+- [`glue-catalog`](modules/glue-catalog/): Database e Crawler do AWS Glue Data Catalog.
 - [`lambda`](modules/lambda/): Provisionamento de funções AWS Lambda.
-- [`athena`](modules/athena/): Configuração de Databases e Workgroups do Athena.
+- [`athena`](modules/athena/): Configuração de Workgroups do Athena.
+- [`vpc`](modules/vpc/): VPC com sub-rede pública/privada e VPC Endpoints (S3, ECR, CloudWatch Logs) — sem NAT Gateway.
+- [`ec2`](modules/ec2/): Instância EC2 genérica, on-demand ou Spot.
+- [`ecr`](modules/ecr/): Repositório ECR com scan on push e lifecycle policy.
+- [`cloudwatch`](modules/cloudwatch/): Log Group com retenção e alarme de métrica opcional.
+
+Os módulos `vpc`, `ec2`, `ecr`, `cloudwatch`, `glue-catalog` e `athena` tem um exemplo mínimo validado em [`examples/`](examples/).
 
 ## Como Consumir (Naming Convention)
 

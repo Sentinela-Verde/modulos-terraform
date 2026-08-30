@@ -33,3 +33,12 @@ jobs:
             echo "== Validating ${module} =="
             (cd "$module" && terraform init -backend=false && terraform validate)
           done
+
+      - name: Validate All Examples
+        run: |
+          set -euo pipefail
+
+          for example in examples/*/; do
+            echo "== Validating ${example} =="
+            (cd "$example" && terraform init -backend=false && terraform validate)
+          done
