@@ -1,6 +1,10 @@
 # Local .terraform directories
 **/.terraform/*
 
+# Lock files gerados ao validar modulos/exemplos isoladamente -- nao
+# refletem o dependency tree real de quem consome o modulo
+**/.terraform.lock.hcl
+
 # .tfstate files
 *.tfstate
 *.tfstate.*
