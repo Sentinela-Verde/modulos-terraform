@@ -1,4 +1,4 @@
-# Central Workflows (AWS Terraform Modules)
+# Modulos Terraform (AWS Terraform Modules)
 
 Este repositório contém módulos reutilizáveis do Terraform para a infraestrutura AWS (projeto Mackenzie Data Engineer).
 A ideia é que os repositórios dos projetos específicos (como o Lakehouse) apenas consumam esses módulos, centralizando a lógica, a segurança e as boas práticas aqui.
@@ -10,8 +10,6 @@ A ideia é que os repositórios dos projetos específicos (como o Lakehouse) ape
 - [`glue-job`](modules/glue-job/): Criação de Jobs do AWS Glue para processamento de dados.
 - [`lambda`](modules/lambda/): Provisionamento de funções AWS Lambda.
 - [`athena`](modules/athena/): Configuração de Databases e Workgroups do Athena.
-- [`lake-formation`](modules/lake-formation/): Permissões granulares e settings do Lake Formation.
-- [`sagemaker`](modules/sagemaker/): Infraestrutura base para o Amazon SageMaker.
 
 ## Como Consumir (Naming Convention)
 
@@ -22,7 +20,7 @@ Exemplo de uso de um módulo em um repositório de projeto.
 ```hcl
 module "datalake_bucket" {
   # Apontando para o repositório centralizado no GitHub:
-  source = "git::https://github.com/Sentinela-Verde/central-workflows.git//modules/s3-bucket?ref=develop"
+  source = "git::https://github.com/Sentinela-Verde/modulos-terraform.git//modules/s3-bucket?ref=v1"
   
   bucket_name = "mackenzie-datalake-bronze"
   tags = {
@@ -32,7 +30,7 @@ module "datalake_bucket" {
 }
 
 module "glue_job_lakehouse" {
-  source = "git::https://github.com/Sentinela-Verde/central-workflows.git//modules/glue-job?ref=develop"
+  source = "git::https://github.com/Sentinela-Verde/modulos-terraform.git//modules/glue-job?ref=v1"
 
   job_name        = "production-lakehouse-glue-jobs"
   role_arn        = "arn:aws:iam::123456789012:role/MinhaRole"
