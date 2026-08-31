@@ -16,7 +16,9 @@ A ideia é que os repositórios dos projetos específicos (como o Lakehouse) ape
 - [`ecr`](modules/ecr/): Repositório ECR com scan on push e lifecycle policy.
 - [`cloudwatch`](modules/cloudwatch/): Log Group com retenção e alarme de métrica opcional.
 
-Os módulos `vpc`, `ec2`, `ecr`, `cloudwatch`, `glue-catalog` e `athena` tem um exemplo mínimo validado em [`examples/`](examples/).
+Os módulos `iam-role`, `vpc`, `ec2`, `ecr`, `cloudwatch`, `glue-catalog` e `athena` tem um exemplo mínimo validado em [`examples/`](examples/).
+
+> **Toda role criada via `iam-role` deve usar a permissions boundary da org** (`Sentinela-Verde-Workload-Boundary`), passada em `permissions_boundary_arn`. Busque o ARN por nome com `data "aws_iam_policy"` — nunca hardcode o ARN. Ver [`examples/iam-role/`](examples/iam-role/).
 
 ## Como Consumir (Naming Convention)
 
