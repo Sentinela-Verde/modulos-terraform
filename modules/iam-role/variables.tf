@@ -14,6 +14,12 @@ variable "managed_policy_arns" {
   default     = []
 }
 
+variable "permissions_boundary_arn" {
+  description = "ARN da policy de permissions boundary a aplicar na role. Nulo nao aplica boundary"
+  type        = string
+  default     = null
+}
+
 variable "tags" {
   description = "Tags padrao aplicadas aos recursos"
   type        = map(string)
