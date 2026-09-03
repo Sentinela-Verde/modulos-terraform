@@ -20,6 +20,12 @@ Os módulos `iam-role`, `vpc`, `ec2`, `ecr`, `cloudwatch`, `glue-catalog` e `ath
 
 > **Toda role criada via `iam-role` deve usar a permissions boundary da org** (`Sentinela-Verde-Workload-Boundary`), passada em `permissions_boundary_arn`. Busque o ARN por nome com `data "aws_iam_policy"` — nunca hardcode o ARN. Ver [`examples/iam-role/`](examples/iam-role/).
 
+## Stacks
+
+Composições de mais de um módulo, formando um pedaço funcional da plataforma — diferente de um módulo primitivo, uma stack não é genérica, resolve um problema específico da arquitetura de referência.
+
+- [`controle`](stacks/controle/): EC2 de controle (`t3.micro` por padrão) rodando MLflow + PostgreSQL via Docker Compose. O PostgreSQL serve exclusivamente como backend store do MLflow — o Airflow roda no Amazon MWAA Serverless, fora desta stack, e tem seu próprio banco gerenciado pela AWS. Swap file, AMI Amazon Linux 2023 resolvida via `data` source, e backup diário do Postgres para S3 já inclusos. Exemplo em [`examples/controle/`](examples/controle/).
+
 ## Como Consumir (Naming Convention)
 
 Exemplo de uso de um módulo em um repositório de projeto. 

@@ -32,7 +32,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ env.TF_PLUGIN_CACHE_DIR }}
-          key: terraform-providers-${{ hashFiles('modules/**/versions.tf') }}
+          key: terraform-providers-${{ hashFiles('modules/**/versions.tf', 'stacks/**/versions.tf') }}
 
       - name: Terraform Format Check (Root)
         run: terraform fmt -check -recursive
@@ -53,4 +53,13 @@ jobs:
           for example in examples/*/; do
             echo "== Validating ${example} =="
             (cd "$example" && terraform init -backend=false && terraform validate)
+          done
+
+      - name: Validate All Stacks
+        run: |
+          set -euo pipefail
+
+          for stack in stacks/*/; do
+            echo "== Validating ${stack} =="
+            (cd "$stack" && terraform init -backend=false && terraform validate)
           done
