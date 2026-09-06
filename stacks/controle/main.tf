@@ -51,9 +51,33 @@ module "mlflow_bucket" {
   tags        = var.tags
 }
 
-resource "aws_iam_policy" "mlflow_s3_access" {
-  name        = "${var.name}-mlflow-s3-access"
-  description = "Leitura/escrita no bucket de artefatos e backups do MLflow"
+module "instance_role" {
+  source = "../../modules/iam-role"
+
+  role_name = "${var.name}-instance-role"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action    = "sts:AssumeRole"
+        Effect    = "Allow"
+        Principal = { Service = "ec2.amazonaws.com" }
+      }
+    ]
+  })
+
+  managed_policy_arns      = []
+  permissions_boundary_arn = data.aws_iam_policy.workload_boundary.arn
+
+  tags = var.tags
+}
+
+# Inline (nao standalone) de proposito: so precisa de iam:PutRolePolicy,
+# ja coberto pela permissao de gestao de role -- evita exigir permissoes
+# de gestao de IAM Policy standalone (CreatePolicy/AttachRolePolicy/etc).
+resource "aws_iam_role_policy" "mlflow_s3_access" {
+  name = "${var.name}-mlflow-s3-access"
+  role = module.instance_role.role_name
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -72,29 +96,6 @@ resource "aws_iam_policy" "mlflow_s3_access" {
       }
     ]
   })
-
-  tags = var.tags
-}
-
-module "instance_role" {
-  source = "../../modules/iam-role"
-
-  role_name = "${var.name}-instance-role"
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action    = "sts:AssumeRole"
-        Effect    = "Allow"
-        Principal = { Service = "ec2.amazonaws.com" }
-      }
-    ]
-  })
-
-  managed_policy_arns      = [aws_iam_policy.mlflow_s3_access.arn]
-  permissions_boundary_arn = data.aws_iam_policy.workload_boundary.arn
-
-  tags = var.tags
 }
 
 # modules/ec2 nao cria instance profile -- so aceita um nome, criamos aqui.
