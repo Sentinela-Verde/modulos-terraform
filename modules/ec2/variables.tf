@@ -66,6 +66,12 @@ variable "root_volume_size" {
   default     = 20
 }
 
+variable "root_volume_type" {
+  description = "Tipo do volume raiz (guardrail da org exige gp3)"
+  type        = string
+  default     = "gp3"
+}
+
 variable "tags" {
   description = "Tags padrao aplicadas aos recursos"
   type        = map(string)
