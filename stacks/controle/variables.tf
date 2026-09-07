@@ -33,7 +33,9 @@ variable "key_name" {
 variable "root_volume_size" {
   description = "Tamanho do volume raiz em GB"
   type        = number
-  default     = 20
+  # AMI atual do Amazon Linux 2023 usa snapshot de 30GB -- volume menor
+  # que o snapshot de origem falha no RunInstances.
+  default = 30
 }
 
 variable "postgres_password" {
