@@ -4,7 +4,7 @@ data "aws_region" "current" {}
 # Toda role criada via Terraform deve usar a permissions boundary da org --
 # busca por nome, nunca por ARN hardcoded (mesmo padrao de examples/iam-role/).
 data "aws_iam_policy" "workload_boundary" {
-  name = "Sentinela-Verde-Workload-Boundary"
+  name = "SentinelaVerde-WorkloadBoundary"
 }
 
 data "aws_ami" "al2023" {

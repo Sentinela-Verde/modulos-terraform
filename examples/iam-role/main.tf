@@ -1,7 +1,7 @@
 # Toda role criada via Terraform deve usar a permissions boundary da org --
 # busca por nome, nunca por ARN hardcoded (o ARN muda entre contas/ambientes).
 data "aws_iam_policy" "workload_boundary" {
-  name = "Sentinela-Verde-Workload-Boundary"
+  name = "SentinelaVerde-WorkloadBoundary"
 }
 
 module "lambda_role" {
