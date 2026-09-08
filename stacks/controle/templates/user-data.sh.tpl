@@ -21,6 +21,10 @@ if [[ ! -f "$SWAP_FILE" ]]; then
   echo "$SWAP_FILE none swap sw 0 0" >> /etc/fstab
 fi
 
+# --- Autenticacao no ECR (imagem privada, sem credential helper instalado) ---
+aws ecr get-login-password --region ${aws_region} \
+  | docker login --username AWS --password-stdin ${ecr_registry}
+
 # --- Stack (Postgres + MLflow) ---
 mkdir -p /opt/controle
 cat > /opt/controle/docker-compose.yml <<'COMPOSE_EOF'

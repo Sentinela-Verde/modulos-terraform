@@ -36,11 +36,18 @@ locals {
     mlflow_bucket     = local.mlflow_bucket_name
   })
 
+  # Registro e nome do repositorio derivados da URI da imagem -- usados pra
+  # autenticar no ECR (docker login) e escopar a permissao de pull da role.
+  ecr_registry   = split("/", var.mlflow_image_uri)[0]
+  ecr_repository = split(":", split("/", var.mlflow_image_uri)[1])[0]
+
   user_data = templatefile("${path.module}/templates/user-data.sh.tpl", {
     swap_size_gb           = var.swap_size_gb
     docker_compose_content = local.docker_compose_content
     postgres_password      = var.postgres_password
     mlflow_bucket          = local.mlflow_bucket_name
+    ecr_registry           = local.ecr_registry
+    aws_region             = data.aws_region.current.name
   })
 }
 
@@ -93,6 +100,23 @@ resource "aws_iam_role_policy" "mlflow_s3_access" {
           module.mlflow_bucket.bucket_arn,
           "${module.mlflow_bucket.bucket_arn}/*",
         ]
+      },
+      {
+        Sid    = "EcrAuth"
+        Effect = "Allow"
+        # GetAuthorizationToken nao aceita escopo por recurso.
+        Action   = ["ecr:GetAuthorizationToken"]
+        Resource = "*"
+      },
+      {
+        Sid    = "EcrPull"
+        Effect = "Allow"
+        Action = [
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:BatchGetImage",
+        ]
+        Resource = "arn:aws:ecr:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:repository/${local.ecr_repository}"
       }
     ]
   })
