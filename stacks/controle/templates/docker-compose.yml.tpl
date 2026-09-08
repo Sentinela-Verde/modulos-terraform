@@ -33,6 +33,11 @@ services:
       - "0.0.0.0"
       - "--port"
       - "5000"
+      # MLflow >= 2.14 bloqueia acesso via IP publico por padrao (protecao
+      # contra DNS rebinding). O acesso ja e restrito por CIDR no security
+      # group, entao "*" aqui nao abre nada que a rede ja nao filtre.
+      - "--allowed-hosts"
+      - "*"
 
 volumes:
   postgres-data:
